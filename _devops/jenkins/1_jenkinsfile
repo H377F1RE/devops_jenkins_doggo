@@ -8,12 +8,6 @@ pipeline {
             }
         }
 
-        stage('Maven Build') {
-            steps {
-                sh "mvn -B -f pom.xml clean package"
-            }
-        }
-
         stage('Docker Compose Up') {
             steps {
                 sh """
