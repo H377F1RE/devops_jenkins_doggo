@@ -13,6 +13,7 @@ pipeline {
         stage('Prepare WS') {
             steps {
                 dir(env.SHARED_WS) {
+                    sh 'docker compose -f ./_devops/docker_compose/docker-compose.yaml down || true'
                     cleanWs()
                 }
             }
@@ -29,11 +30,16 @@ pipeline {
         stage('Compose Up') {
             steps {
                 dir(env.SHARED_WS) {
-                    sh """
-                        cd _devops/docker_compose
-                        docker compose -f docker-compose.yaml up -d --build
-                    """
+                    sh 'docker compose -f ./_devops/docker_compose/docker-compose.yaml up -d --build'
                 }
+            }
+        }
+    }
+
+    post {
+        always {
+            dir(env.SHARED_WS) {
+                cleanWs()
             }
         }
     }

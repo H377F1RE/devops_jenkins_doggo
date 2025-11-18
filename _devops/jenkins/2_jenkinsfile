@@ -13,10 +13,7 @@ pipeline {
         stage('Compose Down') {
             steps {
                 dir(env.SHARED_WS) {
-                    sh """
-                        cd _devops/docker_compose
-                        docker compose down
-                    """
+                    sh 'docker compose -f ./_devops/docker_compose/docker-compose.yaml down'
                 }
             }
         }
