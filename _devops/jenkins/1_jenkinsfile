@@ -1,31 +1,39 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
+    environment {
+        SHARED_WS = '{JENKINS_HOME}/workspace/doggo'
+    }
+
     stages {
+        stage('Prepare WS') {
+            steps {
+                dir(env.SHARED_WS) {
+                    cleanWs()
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
-                checkout scm
+                dir(env.SHARED_WS) {
+                    checkout scm
+                }
             }
         }
 
-        stage('Docker Compose Up') {
+        stage('Compose Up') {
             steps {
-                sh """
-                    cd _devops/docker_compose
-                    docker compose -f docker-compose.yaml up -d --build
-                """
-            }
-        }
-
-        stage('Docker Compose Down') {
-            when {
-                expression { return params.STOP_AFTER_DEPLOY == 'true' }
-            }
-            steps {
-                sh """
-                    cd _devops/docker_compose
-                    docker compose down
-                """
+                dir(env.SHARED_WS) {
+                    sh """
+                        cd _devops/docker_compose
+                        docker compose -f docker-compose.yaml up -d --build
+                    """
+                }
             }
         }
     }

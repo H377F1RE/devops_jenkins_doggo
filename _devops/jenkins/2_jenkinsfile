@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout(true)
+    }
+
+    environment {
+        SHARED_WS = '{JENKINS_HOME}/workspace/doggo'
+    }
+
+    stages {
+        stage('Compose Down') {
+            steps {
+                dir(env.SHARED_WS) {
+                    sh 'docker compose down'
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                dir(env.SHARED_WS) {
+                    cleanWs()
+                }
+            }
+        }
+    }
+}
