@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SHARED_WS = '{JENKINS_HOME}/workspace/doggo'
+        SHARED_WS = '/var/jenkins_home/workspace/doggo'
     }
 
     stages {
